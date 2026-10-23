@@ -497,3 +497,39 @@ footer h3{
     }
 }
 
+
+/* CORREÇÃO DA LARGURA NO CELULAR */
+
+@media (max-width: 768px) {
+
+    html,
+    body {
+        width: 100%;
+        margin: 0;
+    }
+
+    .corpo {
+        width: 100%;
+        padding: 25px 15px;
+        box-sizing: border-box;
+        gap: 25px;
+    }
+
+    .corpo img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .texto {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .texto p {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+
+}
+

@@ -446,15 +446,54 @@ footer h3{
 
 /* CORREÇÃO DO TOPO NO CELULAR */
 
+
+/* CABEÇALHO RESPONSIVO */
+
 @media (max-width: 768px) {
 
     #topo {
         position: relative;
         width: 100%;
+        padding: 15px 12px;
+        box-sizing: border-box;
+        gap: 10px;
+    }
+
+    .logo {
+        flex: 1;
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .logo img {
+        width: 55px;
+        height: 55px;
+        flex-shrink: 0;
+    }
+
+    .logo-texto {
+        min-width: 0;
+    }
+
+    .logo-texto h1 {
+        font-size: 22px;
+    }
+
+    .logo-texto p {
+        font-size: 15px;
+    }
+
+    .acoes {
+        flex-shrink: 0;
+    }
+
+    .btn-icone {
+        width: 45px;
+        height: 45px;
     }
 
     .corpo {
         margin-top: 0;
     }
-
 }
+

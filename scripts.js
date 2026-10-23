@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     configurarMenu();
     configurarBotaoHome();
     carregarCarrinho();
+    atualizarCamposEntrega();
     atualizarPrecoMonte();
     permitirApenasUmaOpcaoPorProduto();
     atualizarContadorCarrinho();
@@ -99,12 +100,15 @@ function atualizarContadorCarrinho() {
 // ADICIONAR PRODUTO NORMAL
 // ===============================
 
+
 function adicionarCarrinho(botao) {
     const card = botao.closest(".produto-item");
 
     if (!card) return;
 
-    const selecionado = card.querySelector("input:checked");
+    const selecionado = card.querySelector(
+        ".tamanhos input:checked"
+    );
 
     if (!selecionado) {
         alert("Selecione uma opção!");
@@ -113,22 +117,37 @@ function adicionarCarrinho(botao) {
 
     const descricao = selecionado.value;
 
-    const match = descricao.match(/R\$ (\d+[.,]?\d*)/);
+    // Identifica o preço informado no produto
+    const match = descricao.match(/R\$\s*(\d+(?:[.,]\d{1,2})?)/);
 
     if (!match) {
         alert("Erro ao identificar o preço.");
         return;
     }
 
-    const preco = parseFloat(match[1].replace(",", "."));
+    const preco = parseFloat(
+        match[1].replace(",", ".")
+    );
 
-    let carrinho = pegarCarrinho();
+    const carrinho = pegarCarrinho();
 
-    carrinho.push({
-        descricao: descricao,
-        preco: preco,
-        quantidade: 1
-    });
+    // Verifica se o produto já está no carrinho
+    const produtoExistente = carrinho.find(item =>
+        item.descricao === descricao &&
+        item.preco === preco
+    );
+
+    if (produtoExistente) {
+        // Produto existente: aumenta a quantidade
+        produtoExistente.quantidade += 1;
+    } else {
+        // Produto novo: adiciona ao carrinho
+        carrinho.push({
+            descricao: descricao,
+            preco: preco,
+            quantidade: 1
+        });
+    }
 
     salvarCarrinho(carrinho);
     atualizarContadorCarrinho();
@@ -137,6 +156,7 @@ function adicionarCarrinho(botao) {
 
     selecionado.checked = false;
 }
+
 
 // ===============================
 // MONTE SEU AÇAÍ
@@ -177,16 +197,41 @@ function atualizarPrecoMonte() {
     precoMonte.innerText = total.toFixed(2);
 }
 
+
 document.addEventListener("change", function(e) {
+    const opcao = e.target;
+
+    // Limita a escolha de cremes
+    if (opcao.classList.contains("creme")) {
+        const cremes = document.querySelectorAll(".creme:checked");
+
+        if (cremes.length > 2) {
+            opcao.checked = false;
+            alert("Você pode escolher no máximo 2 cremes!");
+        }
+    }
+
+    // Limita os acompanhamentos grátis
+    if (opcao.classList.contains("gratis")) {
+        const acompanhamentos = document.querySelectorAll(".gratis:checked");
+
+        if (acompanhamentos.length > 3) {
+            opcao.checked = false;
+            alert("Você pode escolher no máximo 3 acompanhamentos grátis!");
+        }
+    }
+
+    // Atualiza o preço quando qualquer opção é alterada
     if (
-        e.target.classList.contains("creme") ||
-        e.target.classList.contains("gratis") ||
-        e.target.classList.contains("adicional") ||
-        e.target.classList.contains("cobertura")
+        opcao.classList.contains("creme") ||
+        opcao.classList.contains("gratis") ||
+        opcao.classList.contains("adicional") ||
+        opcao.classList.contains("cobertura")
     ) {
         atualizarPrecoMonte();
     }
 });
+
 
 function adicionarMonteAcai() {
     const cremes = document.querySelectorAll(".creme:checked");
@@ -216,27 +261,25 @@ function adicionarMonteAcai() {
 
     const total = parseFloat(document.getElementById("preco-monte").innerText);
 
-    let descricao = "🍧 Monte Seu Açaí\n";
+   
+let descricao = "🍧 Monte Seu Açaí\n";
 
-    descricao += "Cremes: ";
-    cremes.forEach(c => descricao += c.value + ", ");
+descricao += "Cremes: " +
+    Array.from(cremes).map(c => c.value).join(", ");
 
-    descricao += "\nAcompanhamentos grátis: ";
-    if (gratis.length === 0) {
-        descricao += "Nenhum";
-    } else {
-        gratis.forEach(g => descricao += g.value + ", ");
-    }
+descricao += "\nAcompanhamentos grátis: " +
+    (gratis.length > 0
+        ? Array.from(gratis).map(g => g.value).join(", ")
+        : "Nenhum");
 
-    descricao += "\nAdicionais pagos: ";
-    if (adicionais.length === 0) {
-        descricao += "Nenhum";
-    } else {
-        adicionais.forEach(a => descricao += a.value + ", ");
-    }
+descricao += "\nAdicionais pagos: " +
+    (adicionais.length > 0
+        ? Array.from(adicionais).map(a => a.value).join(", ")
+        : "Nenhum");
 
-    descricao += "\nCoberturas: ";
-    coberturas.forEach(c => descricao += c.value + ", ");
+descricao += "\nCoberturas: " +
+    Array.from(coberturas).map(c => c.value).join(", ");
+
 
     let carrinho = pegarCarrinho();
 
@@ -246,10 +289,27 @@ function adicionarMonteAcai() {
         quantidade: 1
     });
 
-    salvarCarrinho(carrinho);
-    atualizarContadorCarrinho();
+    
+salvarCarrinho(carrinho);
+atualizarContadorCarrinho();
 
-    alert("✅ Monte Seu Açaí adicionado ao carrinho!");
+alert("✅ Monte Seu Açaí adicionado ao carrinho!");
+
+// Limpa todas as opções selecionadas
+const opcoesSelecionadas = document.querySelectorAll(
+    "#opcoes-monte-acai input[type='checkbox']:checked"
+);
+
+opcoesSelecionadas.forEach(opcao => {
+    opcao.checked = false;
+});
+
+// Atualiza o preço para o valor inicial
+atualizarPrecoMonte();
+
+// Fecha a área de personalização
+document.getElementById("opcoes-monte-acai").style.display = "none";
+
 }
 
 // ===============================
@@ -269,7 +329,7 @@ function carregarCarrinho() {
 
     if (carrinho.length === 0) {
         container.innerHTML = "<p>Seu carrinho está vazio.</p>";
-        totalSpan.textContent = "0.00";
+        atualizarTotalCarrinho();
         return;
     }
 
@@ -280,7 +340,7 @@ function carregarCarrinho() {
         div.classList.add("item-carrinho");
 
         div.innerHTML = `
-            <h4>${item.descricao}</h4>
+            <h4 class="descricao-carrinho"></h4>
 
             <div class="controle-quantidade">
                 <button onclick="alterarQuantidade(${index}, -1)">➖</button>
@@ -294,11 +354,15 @@ function carregarCarrinho() {
                 Remover
             </button>
         `;
+        
+    const descricaoElemento = div.querySelector(".descricao-carrinho");
+
+    descricaoElemento.textContent = item.descricao;
 
         container.appendChild(div);
     });
 
-    totalSpan.textContent = total.toFixed(2);
+    atualizarTotalCarrinho();
 }
 
 // ===============================
@@ -338,10 +402,16 @@ function removerItem(index) {
 // LIMPAR CARRINHO
 // ===============================
 
+
+
 function limparCarrinho() {
     localStorage.removeItem("carrinho");
+
     carregarCarrinho();
+    atualizarContadorCarrinho();
 }
+
+
 
 // ===============================
 // FINALIZAR PEDIDO NO WHATSAPP
@@ -365,6 +435,13 @@ function finalizarPedido() {
         alert("Digite seu nome!");
         return;
     }
+
+    
+    if (tipoEntrega.trim() === "") {
+        alert("Selecione Entrega ou Retirada!");
+        return;
+    }
+
 
     if (tipoEntrega === "Entrega" && endereco.trim() === "") {
         alert("Digite seu endereço!");
@@ -422,8 +499,61 @@ function finalizarPedido() {
     mensagem += "\n";
     mensagem += "🙏 Obrigado pela preferência!";
 
-   window.open(
+
+const botaoFinalizar = document.getElementById("btn-finalizar");
+
+if (botaoFinalizar.disabled) return;
+
+botaoFinalizar.disabled = true;
+
+window.open(
     `https://wa.me/5584987228300?text=${encodeURIComponent(mensagem)}`,
     "_blank"
 );
+
+setTimeout(() => {
+    botaoFinalizar.disabled = false;
+}, 3000);
+}
+
+
+// ===============================
+// ATUALIZAR TOTAL DO CARRINHO
+// ===============================
+
+
+function atualizarTotalCarrinho() {
+    const carrinho = pegarCarrinho();
+
+    const subtotal = carrinho.reduce((soma, item) => {
+        return soma + item.preco * item.quantidade;
+    }, 0);
+
+    const tipoEntrega = document.getElementById("tipo-entrega");
+
+    if (!tipoEntrega) return;
+
+    const taxa = tipoEntrega.value === "Entrega" && carrinho.length > 0
+        ? 5
+        : 0;
+
+    const total = subtotal + taxa;
+
+    document.getElementById("subtotal").textContent = subtotal.toFixed(2);
+    document.getElementById("taxa-entrega").textContent = taxa.toFixed(2);
+    document.getElementById("total").textContent = total.toFixed(2);
+}
+
+
+function atualizarCamposEntrega() {
+    const tipoEntrega = document.getElementById("tipo-entrega");
+    const camposEntrega = document.getElementById("campos-entrega");
+
+    if (!tipoEntrega || !camposEntrega) return;
+
+    if (tipoEntrega.value === "Entrega") {
+        camposEntrega.style.display = "block";
+    } else {
+        camposEntrega.style.display = "none";
+    }
 }

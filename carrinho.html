@@ -19,37 +19,48 @@ Confira seus itens antes de enviar para o WhatsApp.
         <div id="carrinho-box">
             <div id="lista-carrinho"></div>
 
-            <div class="total-box">
-                <h3>Total:</h3>
-                <span>R$ <span id="total">0.00</span></span>
-            </div>
+            
+<div class="total-box">
+    <div>
+        <p>Subtotal: R$ <span id="subtotal">0.00</span></p>
+        <p>Taxa de entrega: R$ <span id="taxa-entrega">0.00</span></p>
+        <h3>Total: R$ <span id="total">0.00</span></h3>
+    </div>
+</div>
+
 <div class="dados-cliente">
     <h3>Dados para entrega</h3>
 
     <label>Nome:</label>
     <input type="text" id="nome-cliente" placeholder="Digite seu nome">
 
+   
+<label>Tipo do pedido:</label>
+<select id="tipo-entrega" onchange="atualizarTotalCarrinho(); atualizarCamposEntrega();">
+    <option value="Retirada">Retirada no local</option>
+    <option value="Entrega">Entrega</option>
+</select>
+
+<div id="campos-entrega" style="display: none;">
     <label>Endereço:</label>
     <input type="text" id="endereco-cliente" placeholder="Rua, número, bairro">
 
     <label>Referência:</label>
     <input type="text" id="referencia-cliente" placeholder="Ex: próximo à praça">
+</div>
 
-    <label>Tipo do pedido:</label>
-<select id="tipo-entrega">
-    <option value="Retirada">Retirada no local</option>
-    <option value="Entrega">Entrega</option>
+
+<label>Forma de pagamento:</label>
+<select id="pagamento-cliente">
+    <option value="">Selecione</option>
+    <option value="Pix">Pix</option>
+    <option value="Dinheiro">Dinheiro</option>
+    <option value="Cartão de Crédito">Cartão de Crédito</option>
+    <option value="Cartão de Débito">Cartão de Débito</option>
 </select>
 
-    <label>Forma de pagamento:</label>
-    <select id="pagamento-cliente">
-        <option value="">Selecione</option>
-        <option value="Pix">Pix</option>
-        <option value="Dinheiro">Dinheiro</option>
-        <option value="Cartão de Crédito">Cartão de Crédito</option>
-        <option value="Cartão de Débito">Cartão de Débito</option>
-    </select>
 </div>
+
             <div class="botoes-carrinho">
                 <button class="btn-limpar" onclick="limparCarrinho()">
                     Limpar Carrinho
@@ -59,9 +70,11 @@ Confira seus itens antes de enviar para o WhatsApp.
                     Continuar Comprando
                 </a>
 
-                <button class="btn-finalizar" onclick="finalizarPedido()">
-                    Finalizar Pedido
-                </button>
+                
+<button id="btn-finalizar" class="btn-finalizar" onclick="finalizarPedido()">
+    Finalizar Pedido
+</button>
+
             </div>
         </div>
 

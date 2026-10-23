@@ -109,21 +109,45 @@ button,
     margin-top: 10px;
 }
 
+
 @media (max-width: 600px) {
+
+    
+    body {
+        padding: 10px;
+    }
+
+    .carrinho-container {
+        width: 100%;
+        padding: 15px;
+        box-sizing: border-box;
+    }
+
+
     .carrinho-container {
         width: 100%;
         padding: 18px;
     }
 
-    button,
-    .btn-voltar {
+    /* Somente os botões principais ficam largos */
+    .botoes-carrinho button,
+    .botoes-carrinho .btn-voltar {
         width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Botões de aumentar e diminuir quantidade */
+    .controle-quantidade button {
+        width: 38px;
+        min-width: 38px;
+        flex-shrink: 0;
     }
 
     .total-box {
         padding: 14px;
     }
 }
+
 
 .dados-cliente {
     background: #ffffff;
@@ -179,4 +203,12 @@ button,
     color:#777;
     margin-top:-10px;
     margin-bottom:25px;
+}
+
+
+/* Organização dos ingredientes no carrinho */
+.descricao-carrinho {
+    white-space: pre-line;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
 }

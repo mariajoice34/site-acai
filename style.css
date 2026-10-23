@@ -533,3 +533,26 @@ footer h3{
 
 }
 
+
+/* AJUSTE DE LARGURA DOS CARDÁPIOS E PRODUTOS */
+
+.cardapio,
+.produto-item {
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+
+    .cardapio {
+        width: calc(100% - 30px);
+        padding: 20px 15px;
+        margin: 20px auto;
+    }
+
+    .produto-item {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+    }
+
+}

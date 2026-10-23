@@ -556,3 +556,17 @@ footer h3{
     }
 
 }
+
+
+/* TESTE DA IMAGEM PRINCIPAL NO CELULAR */
+
+@media (max-width: 768px) {
+    .corpo img {
+        display: block;
+        width: 100%;
+        max-width: 350px;
+        height: auto;
+        margin: 0 auto;
+        box-sizing: border-box;
+    }
+}

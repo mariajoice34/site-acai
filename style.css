@@ -442,3 +442,19 @@ footer h3{
 
     border: 2px solid white;
 }
+
+
+/* CORREÇÃO DO TOPO NO CELULAR */
+
+@media (max-width: 768px) {
+
+    #topo {
+        position: relative;
+        width: 100%;
+    }
+
+    .corpo {
+        margin-top: 0;
+    }
+
+}

@@ -570,3 +570,15 @@ footer h3{
         box-sizing: border-box;
     }
 }
+
+
+/* TOPO ROXO OCUPANDO TODA A LARGURA */
+
+@media (max-width: 768px) {
+    #topo {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        background-color: rgb(101, 5, 139);
+    }
+}
